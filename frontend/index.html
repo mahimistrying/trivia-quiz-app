@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Trivia Quiz</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f4f4f4;
+            margin: 40px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .question {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px #ddd;
+        }
+
+        .option {
+            margin: 5px 0;
+        }
+
+        .submit-btn {
+            padding: 10px 20px;
+            background: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: darkgreen;
+        }
+
+        .result {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Trivia Quiz</h1>
+    <div id="quiz"></div>
+    <button class="submit-btn" onclick="submitAnswers()">Submit</button>
+    <div id="result" class="result"></div>
+
+    <script>
+        let questions = [];
+        const apiUrl = "http://127.0.0.1:8000/api/questions/?count=5";
+
+        async function loadQuestions() {
+            try {
+                const res = await fetch(apiUrl);
+                questions = await res.json();
+
+                const quizDiv = document.getElementById('quiz');
+                quizDiv.innerHTML = '';
+
+                questions.forEach((q, index) => {
+                    const qDiv = document.createElement('div');
+                    qDiv.className = 'question';
+
+                    qDiv.innerHTML = `
+                        <p><strong>${index + 1}. ${q.question}</strong></p>
+                        <div class="option">
+                            <input type="radio" name="q${index}" value="A"> ${q.option_a}
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q${index}" value="B"> ${q.option_b}
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q${index}" value="C"> ${q.option_c}
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q${index}" value="D"> ${q.option_d}
+                        </div>
+                    `;
+
+                    quizDiv.appendChild(qDiv);
+                });
+            } catch (error) {
+                document.getElementById('quiz').innerHTML = '<p>Error loading questions.</p>';
+                console.error(error);
+            }
+        }
+
+        function submitAnswers() {
+            let score = 0;
+            questions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selected && selected.value === q.correct_answer) {
+                    score += 1;
+                }
+            });
+
+            document.getElementById('result').innerHTML = `
+                You scored ${score} out of ${questions.length}
+            `;
+        }
+
+        loadQuestions();
+    </script>
+</body>
+
+</html>
