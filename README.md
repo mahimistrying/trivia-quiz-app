@@ -149,7 +149,7 @@ UI inspired by modern web design principles
 Icons and emojis for enhanced user experience
 
 📧 Contact
-Your Name - your.email@example.com
-Project Link: https://github.com/YOUR_USERNAME/trivia-quiz-app
+
+Project Link: https://github.com/mahimistrying/trivia-quiz-app
 
 ⭐ Star this repository if you found it helpful!
